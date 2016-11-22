@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "809045752695",
+    "firebase_url": "https://decider-f25d6.firebaseio.com",
+    "project_id": "decider-f25d6",
+    "storage_bucket": "decider-f25d6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:809045752695:android:711459c12fa2a182",
+        "android_client_info": {
+          "package_name": "com.peleg.decider"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "809045752695-b9cgpcm0i7p6s4o3f13fi7nqo8ktakcu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.peleg.decider",
+            "certificate_hash": "DDC25BAE8B7DB9EECBB3CEAFF475797C9E8D6C23"
+          }
+        },
+        {
+          "client_id": "809045752695-bl51jdhha3dr1d56t406ok8iut30omgn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIQ5mgtdQuqSuKh82vDPPiBBWpkYoTcw4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "809045752695-bl51jdhha3dr1d56t406ok8iut30omgn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
