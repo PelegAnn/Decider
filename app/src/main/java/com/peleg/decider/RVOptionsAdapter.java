@@ -14,9 +14,9 @@ import java.util.List;
 /**
  * Created by Annie on 11/4/16.
  */
-public class RVItemsAdapter extends RecyclerView.Adapter<RVItemsAdapter.ViewHolder> {
+public class RVOptionsAdapter extends RecyclerView.Adapter<RVOptionsAdapter.ViewHolder> {
 
-    private List<ItemOption> mItems;
+    private List<Choice> mItems;
     private Context mContext;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -34,13 +34,13 @@ public class RVItemsAdapter extends RecyclerView.Adapter<RVItemsAdapter.ViewHold
         }
     }
 
-    public RVItemsAdapter(List<ItemOption> mItems, Context context) {
+    public RVOptionsAdapter(List<Choice> mItems, Context context) {
         this.mItems = mItems;
         this.mContext = context;
     }
 
     @Override
-    public RVItemsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RVOptionsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
 
@@ -51,8 +51,8 @@ public class RVItemsAdapter extends RecyclerView.Adapter<RVItemsAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(RVItemsAdapter.ViewHolder holder, int position) {
-        ItemOption itemOption = mItems.get(position);
+    public void onBindViewHolder(RVOptionsAdapter.ViewHolder holder, int position) {
+        Choice itemOption = mItems.get(position);
 
         TextView nameTextView = holder.itemName;
         nameTextView.setText(itemOption.getName());

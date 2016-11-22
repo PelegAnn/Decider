@@ -34,7 +34,7 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
-        <fragment android:name="com.peleg.decider.AddNewItemFragment"
+        <fragment android:name="com.peleg.decider.AddNewChoiceFragment"
             android:id="@+id/add_new"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

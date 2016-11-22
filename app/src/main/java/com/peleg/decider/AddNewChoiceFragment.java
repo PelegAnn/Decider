@@ -1,11 +1,8 @@
 package com.peleg.decider;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -16,29 +13,18 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.app.DialogFragment;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
-import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.peleg.decider.com.peleg.decider.db.DbBitmapUtility;
 import com.peleg.decider.com.peleg.decider.db.ItemsDBHelper;
 import com.peleg.decider.com.peleg.decider.db.ItemsReaderContract;
 
@@ -50,7 +36,7 @@ import static com.peleg.decider.com.peleg.decider.db.DbBitmapUtility.getBytes;
 /**
  * Created by Annie on 11/4/16.
  */
-public class AddNewItemFragment extends Fragment {
+public class AddNewChoiceFragment extends Fragment {
 
     private EditText mItemName;
     private RatingBar mRBRank;
@@ -59,9 +45,9 @@ public class AddNewItemFragment extends Fragment {
     private ImageView mImageView;
     private View view;
     private Bitmap imageBitmap;
-    public static AddNewItemFragment newInstance() {
+    public static AddNewChoiceFragment newInstance() {
         Bundle args = new Bundle();
-        AddNewItemFragment fragment = new AddNewItemFragment();
+        AddNewChoiceFragment fragment = new AddNewChoiceFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -94,11 +80,11 @@ public class AddNewItemFragment extends Fragment {
                     Snackbar.make(view, "Please fill in the required fields", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 } else {
-                    ItemOption item;
+                    Choice item;
                     if (imageBitmap != null)
-                        item = new ItemOption(mItemName.getText().toString(), mRBRank.getRating(),imageBitmap);
+                        item = new Choice(mItemName.getText().toString(), mRBRank.getRating(),imageBitmap);
                     else {
-                        item = new ItemOption(mItemName.getText().toString(), mRBRank.getRating());
+                        item = new Choice(mItemName.getText().toString(), mRBRank.getRating());
                     }
                     instertItemToDB(item);
 
@@ -114,7 +100,7 @@ public class AddNewItemFragment extends Fragment {
 
     }
 
-    private void instertItemToDB(ItemOption item) {
+    private void instertItemToDB(Choice item) {
         WriteToDBTask writeToDB = new WriteToDBTask();
         writeToDB.execute(item);
 
@@ -158,7 +144,7 @@ public class AddNewItemFragment extends Fragment {
         startActivityForResult(chooserIntent, REQUEST_IMAGE_CAPTURE);
     }
 //
-//    private void addToDB(ItemOption item) {
+//    private void addToDB(Choice item) {
 //        FirebaseDatabase database = FirebaseDatabase.getInstance();
 //        DatabaseReference myRef = database.getReference("item");
 //
@@ -199,10 +185,10 @@ public class AddNewItemFragment extends Fragment {
     }
 
 
-    private class WriteToDBTask extends AsyncTask<ItemOption, Void, Long> {
+    private class WriteToDBTask extends AsyncTask<Choice, Void, Long> {
 
         @Override
-        protected Long doInBackground(ItemOption... items) {
+        protected Long doInBackground(Choice... items) {
             ItemsDBHelper mDbHelper = new ItemsDBHelper(getContext());
             SQLiteDatabase db = mDbHelper.getWritableDatabase();
 

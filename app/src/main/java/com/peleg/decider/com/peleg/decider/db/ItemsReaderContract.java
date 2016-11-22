@@ -2,10 +2,6 @@ package com.peleg.decider.com.peleg.decider.db;
 
 import android.provider.BaseColumns;
 
-import com.peleg.decider.ItemOption;
-
-import java.sql.Blob;
-
 /**
  * Created by Annie on 11/14/16.
  */

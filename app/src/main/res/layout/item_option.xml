@@ -1,39 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.v7.widget.CardView
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    card_view:cardUseCompatPadding="true"
+    card_view:cardCornerRadius="8dp"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
+    android:id="@+id/card_view"
     >
 
-    <ImageView
-        android:id="@+id/item_image"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/image"
-        />
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/item_details"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/item_name"
+        <ImageView
+            android:id="@+id/item_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/image"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher"
             />
 
-        <RatingBar
-            android:id="@+id/item_rank"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/item_details"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_margin="@dimen/activity_horizontal_margin" />
+            android:background="@color/colorPrimaryDark"
+            android:layout_below="@+id/item_image"
+            android:gravity="center_horizontal"
+            android:layout_alignParentBottom="true"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                />
 
+            <RatingBar
+                android:id="@+id/item_rank"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?android:attr/ratingBarStyleSmall"
+                 />
 
-</RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

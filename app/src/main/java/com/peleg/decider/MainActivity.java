@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -69,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         // To make it fullscreen, use the 'content' root view as the container
         // for the fragment, which is always the root view for the activity
-        transaction.add(android.R.id.content, new AddNewItemFragment())
+        transaction.add(android.R.id.content, new AddNewChoiceFragment())
                 .addToBackStack(null).commit();
 
     }
@@ -122,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                     return PlaceholderFragment.newInstance(position + 1);
                 case 1:
-                    return ItemsFragment.newInstance();
+                    return OptionsListFragment.newInstance();
             }
             return null;
         }

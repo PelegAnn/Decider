@@ -3,12 +3,11 @@ package com.peleg.decider;
 import android.graphics.Bitmap;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by Annie on 11/3/16.
  */
-public class ItemOption {
+public class Choice {
 
     private String name;
     private float rank;
@@ -26,12 +25,12 @@ public class ItemOption {
         this.image = image;
     }
 
-    public ItemOption(String name, float rank) {
+    public Choice(String name, float rank) {
         this.name = name;
         this.rank = rank;
     }
 
-    public ItemOption(String name, float rank, Bitmap image) {
+    public Choice(String name, float rank, Bitmap image) {
         this.name = name;
         this.rank = rank;
         this.image = image;
@@ -49,10 +48,10 @@ public class ItemOption {
         return rank;
     }
 
-    public static ArrayList<ItemOption> createItemOptions(int numOfItems) {
-        ArrayList<ItemOption> createdItems = new ArrayList<>();
+    public static ArrayList<Choice> createItemOptions(int numOfItems) {
+        ArrayList<Choice> createdItems = new ArrayList<>();
         for(int i=0; i<numOfItems; i++) {
-            createdItems.add(new ItemOption("Food",(int)Math.random()));
+            createdItems.add(new Choice("Food",(int)Math.random()));
         }
         return createdItems;
     }

@@ -5,10 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 
-import com.peleg.decider.ItemOption;
+import com.peleg.decider.Choice;
 
 import static com.peleg.decider.com.peleg.decider.db.DbBitmapUtility.getBytes;
 
@@ -36,7 +35,7 @@ public class ItemsDBHelper extends SQLiteOpenHelper {
         onUpgrade(db, oldVersion, newVersion);
     }
 
-    public long addToDB(ItemOption item) {
+    public long addToDB(Choice item) {
         SQLiteDatabase db = getWritableDatabase();
 
         // Create a new map of values, where column names are the keys
