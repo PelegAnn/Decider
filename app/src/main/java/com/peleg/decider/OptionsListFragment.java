@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 public class OptionsListFragment extends Fragment {
 
-    ArrayList<Choice> items;
+    private ArrayList<Choice> items;
     public static OptionsListFragment newInstance() {
         return new OptionsListFragment();
     }
@@ -54,7 +54,7 @@ public class OptionsListFragment extends Fragment {
         if (cursor != null) {
             if( cursor.moveToFirst()) {
                 do {
-                    Choice item = new Choice(cursor.getString(1),cursor.getFloat(2), DbBitmapUtility.getImage(cursor.getBlob(3)));
+                    Choice item = new Choice(cursor.getString(1),cursor.getFloat(2), cursor.getString(3));
                     items.add(item);
                 } while (cursor.moveToNext());
             }

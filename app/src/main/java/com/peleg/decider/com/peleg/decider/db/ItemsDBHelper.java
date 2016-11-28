@@ -42,7 +42,7 @@ public class ItemsDBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(ItemsReaderContract.ItemEntry.COLUMN_NAME_NAME, item.getName());
         values.put(ItemsReaderContract.ItemEntry.COLUMN_NAME_RANK, item.getRank());
-        values.put(ItemsReaderContract.ItemEntry.COLUMN_NAME_IMAGE, getBytes(item.getImage()));
+        values.put(ItemsReaderContract.ItemEntry.COLUMN_NAME_IMAGE,item.getImagePath());
 
         // Insert the new row, returning the primary key value of the new row
         long newRowId = db.insert(ItemsReaderContract.ItemEntry.TABLE_NAME, null, values);

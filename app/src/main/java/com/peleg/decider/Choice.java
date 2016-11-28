@@ -12,6 +12,8 @@ public class Choice {
     private String name;
     private float rank;
     private Bitmap image;
+    private String imagePath;
+
 
     public void setRank(float rank) {
         this.rank = rank;
@@ -30,10 +32,10 @@ public class Choice {
         this.rank = rank;
     }
 
-    public Choice(String name, float rank, Bitmap image) {
+    public Choice(String name, float rank, String imagePath) {
         this.name = name;
         this.rank = rank;
-        this.image = image;
+        this.imagePath = imagePath;
     }
 
     public String getName() {
@@ -55,5 +57,14 @@ public class Choice {
         }
         return createdItems;
     }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
 
 }

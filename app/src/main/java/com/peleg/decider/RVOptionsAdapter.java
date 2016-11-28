@@ -2,6 +2,8 @@ package com.peleg.decider;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 import java.util.List;
 
 /**
@@ -52,16 +57,20 @@ public class RVOptionsAdapter extends RecyclerView.Adapter<RVOptionsAdapter.View
 
     @Override
     public void onBindViewHolder(RVOptionsAdapter.ViewHolder holder, int position) {
-        Choice itemOption = mItems.get(position);
+        Choice choice = mItems.get(position);
 
         TextView nameTextView = holder.itemName;
-        nameTextView.setText(itemOption.getName());
+        nameTextView.setText(choice.getName());
 
         RatingBar ratingBar = holder.itemRank;
-        ratingBar.setRating(itemOption.getRank());
+        ratingBar.setRating(choice.getRank());
 
         ImageView itemImageview = holder.itemImage;
-        itemImageview.setImageBitmap(itemOption.getImage());
+        String path = choice.getImagePath();
+        Picasso.with(getContext()).load(new File(path))
+                .fit().centerCrop()
+                .placeholder(R.mipmap.ic_launcher)
+                .into(itemImageview);
 
     }
 

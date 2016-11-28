@@ -3,18 +3,23 @@ package com.peleg.decider;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,10 +30,16 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.ViewSwitcher;
 
+import com.peleg.decider.com.peleg.decider.db.DbBitmapUtility;
 import com.peleg.decider.com.peleg.decider.db.ItemsDBHelper;
 import com.peleg.decider.com.peleg.decider.db.ItemsReaderContract;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.peleg.decider.com.peleg.decider.db.DbBitmapUtility.getBytes;
@@ -37,6 +48,9 @@ import static com.peleg.decider.com.peleg.decider.db.DbBitmapUtility.getBytes;
  * Created by Annie on 11/4/16.
  */
 public class AddNewChoiceFragment extends Fragment {
+
+    public static final int REQUEST_IMAGE_CAPTURE = 1888;
+    private static String mCurrentPhotoPath;
 
     private EditText mItemName;
     private RatingBar mRBRank;
@@ -68,8 +82,8 @@ public class AddNewChoiceFragment extends Fragment {
             public void onClick(View view) {
                 PackageManager pm = getActivity().getPackageManager();
                 if(pm.hasSystemFeature(PackageManager.FEATURE_CAMERA))
-                    // dispatchTakePictureIntent();
-                test();
+                    dispatchTakePictureIntent();
+                //test();
             }
         });
         mDone = (Button) view.findViewById(R.id.saveButton);
@@ -81,12 +95,13 @@ public class AddNewChoiceFragment extends Fragment {
                             .setAction("Action", null).show();
                 } else {
                     Choice item;
-                    if (imageBitmap != null)
-                        item = new Choice(mItemName.getText().toString(), mRBRank.getRating(),imageBitmap);
-                    else {
+                    if (mCurrentPhotoPath != null) {
+                        item = new Choice(mItemName.getText().toString(), mRBRank.getRating(), mCurrentPhotoPath);
+                        mCurrentPhotoPath = null;
+                    } else {
                         item = new Choice(mItemName.getText().toString(), mRBRank.getRating());
                     }
-                    instertItemToDB(item);
+                    insertItemToDB(item);
 
                 }
             }
@@ -100,19 +115,69 @@ public class AddNewChoiceFragment extends Fragment {
 
     }
 
-    private void instertItemToDB(Choice item) {
+    public File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void insertItemToDB(Choice item) {
         WriteToDBTask writeToDB = new WriteToDBTask();
         writeToDB.execute(item);
 
     }
 
 
-    static final int REQUEST_IMAGE_CAPTURE = 1888;
+    private void handleBigCameraPhoto() {
+
+        if (mCurrentPhotoPath != null) {
+
+            Picasso.with(getActivity()).load(new File(mCurrentPhotoPath))
+                    .fit().centerCrop()
+                    .placeholder(R.mipmap.ic_launcher)
+                    .into(mImageView);
+            galleryAddPic();
+        }
+
+    }
+
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent("android.intent.action.MEDIA_SCANNER_SCAN_FILE");
+        File f = new File(mCurrentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        getActivity().sendBroadcast(mediaScanIntent);
+    }
+
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(getContext(),
+                        "com.peleg.decider.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
         }
     }
 
@@ -177,10 +242,11 @@ public class AddNewChoiceFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            Bundle extras = data.getExtras();
-            imageBitmap = (Bitmap) extras.get("data");
-            simpleViewSwitcher.showNext();
-            mImageView.setImageBitmap(imageBitmap);
+//            Bundle extras = data.getExtras();
+//            imageBitmap = (Bitmap) extras.get("data");
+//            simpleViewSwitcher.showNext();
+//            mImageView.setImageBitmap(imageBitmap);
+            handleBigCameraPhoto();
         }
     }
 
@@ -196,7 +262,7 @@ public class AddNewChoiceFragment extends Fragment {
             ContentValues values = new ContentValues();
             values.put(ItemsReaderContract.ItemEntry.COLUMN_NAME_NAME, items[0].getName());
             values.put(ItemsReaderContract.ItemEntry.COLUMN_NAME_RANK, items[0].getRank());
-            values.put(ItemsReaderContract.ItemEntry.COLUMN_NAME_IMAGE, getBytes(items[0].getImage()));
+            values.put(ItemsReaderContract.ItemEntry.COLUMN_NAME_IMAGE, items[0].getImagePath());
 
             // Insert the new row, returning the primary key value of the new row
             return db.insert(ItemsReaderContract.ItemEntry.TABLE_NAME, null, values);
