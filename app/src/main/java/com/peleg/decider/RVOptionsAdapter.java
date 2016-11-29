@@ -2,8 +2,6 @@ package com.peleg.decider;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,10 +65,11 @@ public class RVOptionsAdapter extends RecyclerView.Adapter<RVOptionsAdapter.View
 
         ImageView itemImageview = holder.itemImage;
         String path = choice.getImagePath();
-        Picasso.with(getContext()).load(new File(path))
-                .fit().centerCrop()
-                .placeholder(R.mipmap.ic_launcher)
-                .into(itemImageview);
+        if(path != null)
+            Picasso.with(getContext()).load(new File(path))
+                    .fit().centerCrop()
+                    .placeholder(R.mipmap.ic_launcher)
+                    .into(itemImageview);
 
     }
 

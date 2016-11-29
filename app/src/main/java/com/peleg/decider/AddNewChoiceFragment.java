@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -58,7 +56,9 @@ public class AddNewChoiceFragment extends Fragment {
     private Button mImage, mDone, mCancel;
     private ImageView mImageView;
     private View view;
-    private Bitmap imageBitmap;
+    private ImageView nextView;
+
+
     public static AddNewChoiceFragment newInstance() {
         Bundle args = new Bundle();
         AddNewChoiceFragment fragment = new AddNewChoiceFragment();
@@ -73,9 +73,13 @@ public class AddNewChoiceFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         view =  inflater.inflate(R.layout.dialogfragment_addnewitem, container, false);
 
+        simpleViewSwitcher = (ViewSwitcher) view.findViewById(R.id.viewSwitcher); // get the reference of ViewSwitcher
+
         mItemName = (EditText) view.findViewById(R.id.item_name);
         mRBRank = (RatingBar) view.findViewById(R.id.item_ratingBar) ;
+        // second view
         mImageView = (ImageView) view.findViewById(R.id.item_thumb_image);
+        // first view
         mImage = (Button) view.findViewById(R.id.item_image);
         mImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,8 +111,8 @@ public class AddNewChoiceFragment extends Fragment {
             }
         });
 
-        simpleViewSwitcher = (ViewSwitcher) view.findViewById(R.id.viewSwitcher); // get the reference of ViewSwitcher
-        View nextView=simpleViewSwitcher.getNextView(); // get next view to be displayed
+
+        //mImageView= (ImageView) simpleViewSwitcher.getNextView(); // get next view to be displayed
 
 
         return view;
@@ -146,6 +150,13 @@ public class AddNewChoiceFragment extends Fragment {
                     .fit().centerCrop()
                     .placeholder(R.mipmap.ic_launcher)
                     .into(mImageView);
+
+            if (simpleViewSwitcher.getCurrentView() != mImageView){
+                simpleViewSwitcher.showPrevious();
+            } else {
+                simpleViewSwitcher.showNext();
+            }
+
             galleryAddPic();
         }
 
@@ -208,29 +219,6 @@ public class AddNewChoiceFragment extends Fragment {
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[]{}));
         startActivityForResult(chooserIntent, REQUEST_IMAGE_CAPTURE);
     }
-//
-//    private void addToDB(Choice item) {
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference myRef = database.getReference("item");
-//
-//        myRef.setValue(item.getName(),item.getRank());
-//
-//        myRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                // This method is called once with the initial value and again
-//                // whenever data at this location is updated.
-//                String value = dataSnapshot.getValue(String.class);
-//                Log.d("AddNew", "Value is: " + value);
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError error) {
-//                // Failed to read value
-//                Log.e("AddNew", "Failed to read value.", error.toException());
-//            }
-//        });
-//    }
 
     @Override
     public void onPause() {
@@ -282,7 +270,7 @@ public class AddNewChoiceFragment extends Fragment {
             Snackbar.make(view, "Item no. "+String.valueOf(aLong)+" successfully saved! ", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
-            //TODO doneAddingNewItem();
+            //TODO doneAddNewItem();
         }
     }
 
