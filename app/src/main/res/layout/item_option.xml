@@ -4,12 +4,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardUseCompatPadding="true"
-    card_view:cardCornerRadius="8dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
     android:id="@+id/card_view"
     >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/item_image"
@@ -17,8 +17,9 @@
             android:layout_height="match_parent"
             android:contentDescription="@string/image"
             android:adjustViewBounds="true"
-            android:scaleType="center"
-            android:src="@mipmap/ic_launcher" />
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher"
+            />
 
         <LinearLayout
             android:id="@+id/item_details"
@@ -28,9 +29,7 @@
             android:layout_below="@+id/item_image"
             android:gravity="center_horizontal"
             android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp"
+            android:padding="8dp"
             android:orientation="vertical">
 
             <TextView
@@ -48,5 +47,6 @@
                  />
 
         </LinearLayout>
+    </RelativeLayout>
 
 </android.support.v7.widget.CardView>

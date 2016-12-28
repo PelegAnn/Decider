@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class RVOptionsAdapter extends RecyclerView.Adapter<RVOptionsAdapter.ViewHolder> {
 
-    private List<Choice> mItems;
+    private OptionsList opList;
     private Context mContext;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -37,8 +37,7 @@ public class RVOptionsAdapter extends RecyclerView.Adapter<RVOptionsAdapter.View
         }
     }
 
-    public RVOptionsAdapter(List<Choice> mItems, Context context) {
-        this.mItems = mItems;
+    public RVOptionsAdapter(Context context) {
         this.mContext = context;
     }
 
@@ -55,7 +54,8 @@ public class RVOptionsAdapter extends RecyclerView.Adapter<RVOptionsAdapter.View
 
     @Override
     public void onBindViewHolder(RVOptionsAdapter.ViewHolder holder, int position) {
-        Choice choice = mItems.get(position);
+
+        Choice choice = opList.getInstance().getList().get(position);
 
         TextView nameTextView = holder.itemName;
         nameTextView.setText(choice.getName());
@@ -75,7 +75,7 @@ public class RVOptionsAdapter extends RecyclerView.Adapter<RVOptionsAdapter.View
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return opList.getInstance().getList().size();
     }
 
     public Context getContext() {
