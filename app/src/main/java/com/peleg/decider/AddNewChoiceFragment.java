@@ -56,7 +56,6 @@ public class AddNewChoiceFragment extends Fragment {
     private Button mImage, mDone, mCancel;
     private ImageView mImageView;
     private View view;
-    private ImageView nextView;
 
 
     public static AddNewChoiceFragment newInstance() {
@@ -238,6 +237,10 @@ public class AddNewChoiceFragment extends Fragment {
         }
     }
 
+    public void doneAddNewItem() {
+        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+    }
+
 
     private class WriteToDBTask extends AsyncTask<Choice, Void, Long> {
 
@@ -270,8 +273,9 @@ public class AddNewChoiceFragment extends Fragment {
             Snackbar.make(view, "Item no. "+String.valueOf(aLong)+" successfully saved! ", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
-            //TODO doneAddNewItem();
+            doneAddNewItem();
         }
     }
+
 
 }

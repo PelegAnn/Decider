@@ -2,6 +2,7 @@ package com.peleg.decider;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,6 @@ import java.util.List;
  * Created by Annie on 11/4/16.
  */
 public class RVOptionsAdapter extends RecyclerView.Adapter<RVOptionsAdapter.ViewHolder> {
-
     private OptionsList opList;
     private Context mContext;
 
@@ -35,6 +35,7 @@ public class RVOptionsAdapter extends RecyclerView.Adapter<RVOptionsAdapter.View
             itemRank = (RatingBar) itemView.findViewById(R.id.item_rank);
             itemImage = (ImageView) itemView.findViewById(R.id.item_image);
         }
+
     }
 
     public RVOptionsAdapter(Context context) {
@@ -81,4 +82,6 @@ public class RVOptionsAdapter extends RecyclerView.Adapter<RVOptionsAdapter.View
     public Context getContext() {
         return mContext;
     }
+
+
 }
