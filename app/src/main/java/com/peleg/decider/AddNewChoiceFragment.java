@@ -18,7 +18,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +29,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.peleg.decider.com.peleg.decider.db.DbBitmapUtility;
 import com.peleg.decider.com.peleg.decider.db.ItemsDBHelper;
 import com.peleg.decider.com.peleg.decider.db.ItemsReaderContract;
 import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,15 +53,24 @@ import static com.peleg.decider.com.peleg.decider.db.DbBitmapUtility.getBytes;
  */
 public class AddNewChoiceFragment extends Fragment {
 
+    OnDoneAddNewItemListener mCallback;
+
+    public interface OnDoneAddNewItemListener {
+        void onDone(Choice itemToAdd);
+    }
+
     public static final int REQUEST_IMAGE_CAPTURE = 1888;
     private static String mCurrentPhotoPath;
 
     private EditText mItemName;
     private RatingBar mRBRank;
-    ViewSwitcher simpleViewSwitcher;
+    private ViewSwitcher simpleViewSwitcher;
+    private TextView title;
     private Button mImage, mDone, mCancel;
     private ImageView mImageView;
     private View view;
+
+    private Choice item;
 
 
     public static AddNewChoiceFragment newInstance() {
@@ -65,6 +80,17 @@ public class AddNewChoiceFragment extends Fragment {
         return fragment;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mCallback = (OnDoneAddNewItemListener) context;
+        } catch (ClassCastException e) {
+                throw new ClassCastException(context.toString()
+                        + " must implement OnDoneAddNewItemListener");
+        }
+    }
 
     @Nullable
     @Override
@@ -74,7 +100,24 @@ public class AddNewChoiceFragment extends Fragment {
 
         simpleViewSwitcher = (ViewSwitcher) view.findViewById(R.id.viewSwitcher); // get the reference of ViewSwitcher
 
+        title = (TextView) view.findViewById(R.id.dialog_title);
         mItemName = (EditText) view.findViewById(R.id.item_name);
+        mItemName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                title.setText(charSequence);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         mRBRank = (RatingBar) view.findViewById(R.id.item_ratingBar) ;
         // second view
         mImageView = (ImageView) view.findViewById(R.id.item_thumb_image);
@@ -97,7 +140,6 @@ public class AddNewChoiceFragment extends Fragment {
                     Snackbar.make(view, "Please fill in the required fields", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 } else {
-                    Choice item;
                     if (mCurrentPhotoPath != null) {
                         item = new Choice(mItemName.getText().toString(), mRBRank.getRating(), mCurrentPhotoPath);
                         mCurrentPhotoPath = null;
@@ -107,6 +149,13 @@ public class AddNewChoiceFragment extends Fragment {
                     insertItemToDB(item);
 
                 }
+            }
+        });
+        mCancel = (Button) view.findViewById(R.id.cancelButton);
+        mCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                closeView();
             }
         });
 
@@ -238,6 +287,13 @@ public class AddNewChoiceFragment extends Fragment {
     }
 
     public void doneAddNewItem() {
+        mCallback.onDone(item);
+        //OptionsList.getInstance().getList().add(item);
+        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+
+    }
+
+    public void closeView() {
         getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
     }
 
@@ -247,16 +303,7 @@ public class AddNewChoiceFragment extends Fragment {
         @Override
         protected Long doInBackground(Choice... items) {
             ItemsDBHelper mDbHelper = new ItemsDBHelper(getContext());
-            SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
-            // Create a new map of values, where column names are the keys
-            ContentValues values = new ContentValues();
-            values.put(ItemsReaderContract.ItemEntry.COLUMN_NAME_NAME, items[0].getName());
-            values.put(ItemsReaderContract.ItemEntry.COLUMN_NAME_RANK, items[0].getRank());
-            values.put(ItemsReaderContract.ItemEntry.COLUMN_NAME_IMAGE, items[0].getImagePath());
-
-            // Insert the new row, returning the primary key value of the new row
-            return db.insert(ItemsReaderContract.ItemEntry.TABLE_NAME, null, values);
+            return mDbHelper.addToDB(items[0]);
         }
 
         @Override
@@ -269,11 +316,11 @@ public class AddNewChoiceFragment extends Fragment {
         @Override
         protected void onPostExecute(Long aLong) {
             super.onPostExecute(aLong);
-            Log.e("TAG",String.valueOf(aLong));
-            Snackbar.make(view, "Item no. "+String.valueOf(aLong)+" successfully saved! ", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//            Snackbar.make(view, "Item no. "+String.valueOf(aLong)+" successfully saved! ", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
 
             doneAddNewItem();
+
         }
     }
 

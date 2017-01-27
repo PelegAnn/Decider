@@ -16,7 +16,7 @@ import static com.peleg.decider.com.peleg.decider.db.DbBitmapUtility.getBytes;
  */
 public class ItemsDBHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "ItemsReader.db";
 
     public ItemsDBHelper(Context context) {
@@ -71,4 +71,12 @@ public class ItemsDBHelper extends SQLiteOpenHelper {
                 sortOrder                                 // The sort order
         );
     }
+
+    public void deleteItem(Choice item) {
+        SQLiteDatabase db = getWritableDatabase();
+        String selection = ItemsReaderContract.ItemEntry.COLUMN_NAME_NAME + " LIKE ?";
+        String[] selectionArgs = { item.getName() };
+        db.delete(ItemsReaderContract.ItemEntry.TABLE_NAME, selection, selectionArgs);
+    }
+
 }

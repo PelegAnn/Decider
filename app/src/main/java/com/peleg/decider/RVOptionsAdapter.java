@@ -13,14 +13,17 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Annie on 11/4/16.
  */
 public class RVOptionsAdapter extends RecyclerView.Adapter<RVOptionsAdapter.ViewHolder> {
-    private OptionsList opList;
+    private ArrayList<Choice> mItems;
     private Context mContext;
+
+    private RVOptionsAdapter.ViewHolder mHolder;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -28,18 +31,24 @@ public class RVOptionsAdapter extends RecyclerView.Adapter<RVOptionsAdapter.View
         public RatingBar itemRank;
         public ImageView itemImage;
 
+
         public ViewHolder(View itemView) {
             super(itemView);
+
+            mHolder = this;
 
             itemName = (TextView) itemView.findViewById(R.id.item_name);
             itemRank = (RatingBar) itemView.findViewById(R.id.item_rank);
             itemImage = (ImageView) itemView.findViewById(R.id.item_image);
         }
 
+
+
     }
 
-    public RVOptionsAdapter(Context context) {
+    public RVOptionsAdapter(Context context,ArrayList<Choice> items) {
         this.mContext = context;
+        this.mItems = items;
     }
 
     @Override
@@ -56,7 +65,7 @@ public class RVOptionsAdapter extends RecyclerView.Adapter<RVOptionsAdapter.View
     @Override
     public void onBindViewHolder(RVOptionsAdapter.ViewHolder holder, int position) {
 
-        Choice choice = opList.getInstance().getList().get(position);
+        Choice choice = mItems.get(position);
 
         TextView nameTextView = holder.itemName;
         nameTextView.setText(choice.getName());
@@ -76,12 +85,22 @@ public class RVOptionsAdapter extends RecyclerView.Adapter<RVOptionsAdapter.View
 
     @Override
     public int getItemCount() {
-        return opList.getInstance().getList().size();
+        return mItems.size();
     }
 
     public Context getContext() {
         return mContext;
     }
 
+    public void add(Choice choice, int position) {
+        mItems.add(position,choice);
+
+        Log.e("Adapter- POSITION",String.valueOf(mHolder.getAdapterPosition()));
+        Log.e("POSITION",String.valueOf(position));
+
+        //notifyItemInserted(mHolder.getAdapterPosition());
+        notifyItemInserted(position);
+        //this.notifyDataSetChanged();
+    }
 
 }

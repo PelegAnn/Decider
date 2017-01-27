@@ -18,13 +18,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AddNewChoiceFragment.OnDoneAddNewItemListener{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -103,11 +106,23 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public void onDone(Choice itemToAdd) {
+
+        mSectionsPagerAdapter.add(itemToAdd);
+        //OptionsListFragment fragment = (OptionsListFragment) getFragmentManager().findFragmentByTag(SectionsPagerAdapter.makeFragmentName(R.id.container,1));
+
+        //OptionsListFragment.newInstance().addNewItem(itemToAdd);
+    }
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public static class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        private OptionsListFragment optionsListFragment;
+        private PlaceholderFragment mainFragment;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -140,6 +155,26 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
+
+        public void add(Choice item) {
+            if(optionsListFragment!= null) {
+                optionsListFragment.addNewItem(item);
+            }
+        }
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment createdFragment = (Fragment) super.instantiateItem(container, position);
+            // save the appropriate reference depending on position
+            switch (position) {
+                case 0:
+                    mainFragment = (PlaceholderFragment) createdFragment;
+                    break;
+                case 1:
+                    optionsListFragment = (OptionsListFragment) createdFragment;
+                    break;
+            }
+            return createdFragment;
+        }
     }
 
     /**
@@ -151,8 +186,10 @@ public class MainActivity extends AppCompatActivity {
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
-        private Button decideBtn;
+        private ImageButton decideBtn;
+        private ImageView gif;
         private TextView textView;
+
 
         private View rootView;
         /**
@@ -175,15 +212,25 @@ public class MainActivity extends AppCompatActivity {
                 Bundle savedInstanceState) {
             rootView = inflater.inflate(R.layout.fragment_main, container, false);
             textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
 
-            decideBtn = (Button) rootView.findViewById(R.id.decide);
+           // gif = (ImageView) rootView.findViewById(R.id.decision_gif);
+//            GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(gif);
+//            Glide.with(getContext()).load(R.raw.test).into(imageViewTarget);
+
+            decideBtn = (ImageButton) rootView.findViewById(R.id.decide);
+//            gif.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                   textView.setText(makeADecision().getName());
+//
+//
+//                }
+//            });
             decideBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     textView.setText(makeADecision().getName());
-
-
                 }
             });
             return rootView;
